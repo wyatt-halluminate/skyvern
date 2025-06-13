@@ -149,7 +149,18 @@ class UITarsLLMCaller(LLMCaller):
             use_message_history=True,  # Use conversation history
         )
 
-        # Add the response to conversation history
-        self.add_assistant_response(response)
+        # Extract the string response from the dict response
+        if isinstance(response, dict):
+            # If it's a standardized dict with "response" key, extract the string
+            if "response" in response:
+                response_str = response["response"]
+            else:
+                # For other dict formats, convert to string representation
+                response_str = str(response)
+        else:
+            response_str = response
 
-        return response
+        # Add the response to conversation history
+        self.add_assistant_response(response_str)
+
+        return response_str

@@ -106,6 +106,7 @@ class TestParseApiResponse:
                 """)
         result = parse_api_response(response)
         # Should fix the cutoff JSON by completing the incomplete structure
+        assert isinstance(result, dict)
         assert "actions" in result
         assert isinstance(result["actions"], list)
         assert len(result["actions"]) == 1
@@ -122,6 +123,7 @@ class TestParseApiResponse:
         """)
         result = parse_api_response(response)
         # Should fix the cutoff JSON by completing the incomplete structure
+        assert isinstance(result, dict)
         assert "actions" in result
         assert isinstance(result["actions"], list)
         assert len(result["actions"]) >= 2  # At least the complete actions should be preserved

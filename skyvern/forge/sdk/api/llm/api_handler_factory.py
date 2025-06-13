@@ -233,6 +233,12 @@ class LLMAPIHandlerFactory:
                         cached_token_count=cached_tokens if cached_tokens > 0 else None,
                     )
             parsed_response = parse_api_response(response, llm_config.add_assistant_prefix)
+
+            # Handle case where parsed_response might be a string (for UI-TARS responses)
+            if isinstance(parsed_response, str):
+                # For string responses, create a standardized dict format
+                parsed_response = {"response": parsed_response}
+
             await app.ARTIFACT_MANAGER.create_llm_artifact(
                 data=json.dumps(parsed_response, indent=2).encode("utf-8"),
                 artifact_type=ArtifactType.LLM_RESPONSE_PARSED,
@@ -437,6 +443,12 @@ class LLMAPIHandlerFactory:
                         thought_cost=llm_cost,
                     )
             parsed_response = parse_api_response(response, llm_config.add_assistant_prefix)
+
+            # Handle case where parsed_response might be a string (for UI-TARS responses)
+            if isinstance(parsed_response, str):
+                # For string responses, create a standardized dict format
+                parsed_response = {"response": parsed_response}
+
             await app.ARTIFACT_MANAGER.create_llm_artifact(
                 data=json.dumps(parsed_response, indent=2).encode("utf-8"),
                 artifact_type=ArtifactType.LLM_RESPONSE_PARSED,
@@ -711,6 +723,12 @@ class LLMCaller:
             return response.model_dump(exclude_none=True)
 
         parsed_response = parse_api_response(response, self.llm_config.add_assistant_prefix)
+
+        # Handle case where parsed_response might be a string (for UI-TARS responses)
+        if isinstance(parsed_response, str):
+            # For string responses, create a standardized dict format
+            parsed_response = {"response": parsed_response}
+
         await app.ARTIFACT_MANAGER.create_llm_artifact(
             data=json.dumps(parsed_response, indent=2).encode("utf-8"),
             artifact_type=ArtifactType.LLM_RESPONSE_PARSED,
