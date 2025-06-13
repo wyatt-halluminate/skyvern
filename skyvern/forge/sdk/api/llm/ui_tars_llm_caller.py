@@ -147,12 +147,9 @@ class UITarsLLMCaller(LLMCaller):
         response = await self.call(
             step=step,
             use_message_history=True,  # Use conversation history
-            raw_response=True,  # Skip JSON parsing for plain text
         )
 
-        content = response["choices"][0]["message"]["content"]
-
         # Add the response to conversation history
-        self.add_assistant_response(content)
+        self.add_assistant_response(response)
 
-        return content
+        return response

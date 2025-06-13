@@ -138,10 +138,16 @@ async def llm_messages_builder_with_history(
     return messages
 
 
-def parse_api_response(response: litellm.ModelResponse, add_assistant_prefix: bool = False) -> dict[str, Any]:
+def parse_api_response(response: litellm.ModelResponse, add_assistant_prefix: bool = False) -> dict[str, Any] | str:
     content = None
     try:
         content = response.choices[0].message.content
+
+        # For UI-TARS responses (which come as ModelResponse), check if content is not JSON
+        # and return it as-is if it's text-based action format
+        if content and ("Action:" in content or "Thought:" in content):
+            return content
+
         # Since we prefilled Anthropic response with "{" we need to add it back to the response to have a valid json object:
         if add_assistant_prefix:
             content = "{" + content
